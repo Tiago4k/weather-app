@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Titles from "./components/Titles";
 import Form from "./components/Form";
@@ -6,17 +6,17 @@ import Weather from "./components/Weather";
 
 const API_KEY = "66fd694ea82e6bac4285a6d23a370ba8";
 
-class App extends React.Component {
-  state = {
+function App() {
+  const [tempInfo, setTempInfo] = useState({
     temperature: undefined,
     city: undefined,
     country: undefined,
     humidity: undefined,
     description: undefined,
     error: undefined
-  };
+  });
 
-  getWeather = async e => {
+  const getWeather = async e => {
     e.preventDefault();
     const city = e.target.elements.city.value;
     const country = e.target.elements.country.value;
@@ -36,7 +36,7 @@ class App extends React.Component {
     }
 
     if (city) {
-      this.setState({
+      setTempInfo({
         temperature: data.main.temp,
         city: data.name,
         country: data.sys.country,
@@ -45,7 +45,7 @@ class App extends React.Component {
         error: ""
       });
     } else {
-      this.setState({
+      setTempInfo({
         temperature: undefined,
         city: undefined,
         country: undefined,
@@ -56,34 +56,32 @@ class App extends React.Component {
     }
   };
 
-  render() {
-    return (
-      <div>
-        <div className="wrapper">
-          <div className="main">
-            <div className="container">
-              <div className="row">
-                <div className="col-5 title-container">
-                  <Titles />
-                </div>
-                <div className="col-7 form-container">
-                  <Form getWeather={this.getWeather} />
-                  <Weather
-                    temperature={this.state.temperature}
-                    city={this.state.city}
-                    country={this.state.country}
-                    humidity={this.state.humidity}
-                    description={this.state.description}
-                    error={this.state.error}
-                  />
-                </div>
+  return (
+    <div>
+      <div className="wrapper">
+        <div className="main">
+          <div className="container">
+            <div className="row">
+              <div className="col-xs-3 title-container">
+                <Titles />
+              </div>
+              <div className="col-xs-8 form-container">
+                <Form getWeather={getWeather} />
+                <Weather
+                  temperature={tempInfo.temperature}
+                  city={tempInfo.city}
+                  country={tempInfo.country}
+                  humidity={tempInfo.humidity}
+                  description={tempInfo.description}
+                  error={tempInfo.error}
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default App;
